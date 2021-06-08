@@ -269,7 +269,8 @@ impl Client {
 mod tests {
 	use {super::*, std::str::FromStr};
 
-	//#[test]
+	#[test]
+	#[ignore]
 	fn test_insert_one() {
 		let client = ClientOptions::from_str("mongodb://localhost:27017/?serverSelectionTimeoutMS=500").unwrap()
 			.connect().unwrap();
@@ -281,6 +282,6 @@ mod tests {
 		assert!(coll.find(None, None).unwrap().next().is_none());
 		coll.insert_one(doc! { "test" => "test" }, None).unwrap();
 		assert!(coll.find(None, None).unwrap().next().unwrap().unwrap().into_iter()
-					   .collect::<Vec<_>>().contains(&("test", Bson::String("test"))));
+					   .any(|x| x == ("test", Bson::String("test"))));
 	}
 }

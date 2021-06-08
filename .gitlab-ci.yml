@@ -17,7 +17,7 @@ test:stable:
     extends: .rust-default
     stage: check
     script:
-        - cargo +nightly test --verbose --no-fail-fast -- -Z unstable-options --format json | cargo2junit > results.xml
+        - cargo +nightly test --verbose --all-features --no-fail-fast -- -Z unstable-options --format json | cargo2junit > results.xml
     artifacts:
         when: always
         reports:
@@ -28,13 +28,13 @@ test:beta:
     extends: test:stable
     allow_failure: true
     script:
-        - cargo +beta test --verbose --no-fail-fast -- -Z unstable-options --format json | cargo2junit > results.xml
+        - cargo +beta test --verbose --all-features --no-fail-fast -- -Z unstable-options --format json | cargo2junit > results.xml
 
 test:nightly:
     extends: test:stable
     allow_failure: true
     script:
-        - cargo +nightly test --verbose --no-fail-fast -- -Z unstable-options --format json | cargo2junit > results.xml
+        - cargo +nightly test --verbose --all-features --no-fail-fast -- -Z unstable-options --format json | cargo2junit > results.xml
 
 bench:stable:
     extends: .rust-default
@@ -62,7 +62,7 @@ clippy:stable:
     extends: .rust-default
     stage: check
     script:
-        - cargo +stable clippy --verbose --all --message-format=json | gitlab-clippy > gl-code-quality-report.json
+        - cargo +stable clippy --verbose --all-targets --all-features --message-format=json | gitlab-clippy > gl-code-quality-report.json
     artifacts:
         when: always
         reports:
@@ -72,13 +72,13 @@ clippy:beta:
     extends: clippy:stable
     allow_failure: true
     script:
-        - cargo +beta clippy --verbose --all --message-format=json | gitlab-clippy > gl-code-quality-report.json
+        - cargo +beta clippy --verbose --all-targets --all-features --message-format=json | gitlab-clippy > gl-code-quality-report.json
 
 clippy:nightly:
     extends: clippy:stable
     allow_failure: true
     script:
-        - cargo +nightly clippy --verbose --all --message-format=json | gitlab-clippy > gl-code-quality-report.json
+        - cargo +nightly clippy --verbose --all-targets --all-features --message-format=json | gitlab-clippy > gl-code-quality-report.json
 
 check:fmt:
     extends: .rust-default
@@ -129,11 +129,10 @@ release:gitlab:
         GIT_STRATEGY: none
     script:
         - release-cli create \
-          --name $CI_COMMIT_TAG \
-          --description $CI_COMMIT_MESSAGE \
-          --tag-name $CI_COMMIT_TAG \
-          --ref $CI_COMMIT_SHA \
-          --assets-link '{"name":"Docs","url":""}'
+            --name $CI_COMMIT_TAG \
+            --description $CI_COMMIT_MESSAGE \
+            --tag-name $CI_COMMIT_TAG \
+            --ref $CI_COMMIT_SHA
     release:
         name: $CI_COMMIT_TAG
         description: './CHANGELOG.md'
