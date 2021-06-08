@@ -1,0 +1,33 @@
+[package]
+name        = "mongo-driver"
+version     = "0.1.0"
+authors     = ["Tobias Pfeiffer <tobias@tobiaspfeiffer.net>"]
+edition     = "2018"
+publish     = false
+repository  = "https://gitlab.com/TobiP64/mongo-driver"
+license     = "MIT"
+description = "MongoDB driver"
+
+[features]
+default  = ["tls", "auth", "compress"]
+tls      = ["rustls", "webpki"]
+auth     = ["md5", "sha2", "hmac", "pbkdf2", "base64"]
+compress = ["zstd"]
+async    = ["futures-io", "async-std", "async-tls", "async-trait"]
+
+[dependencies]
+rand        = "^0.7"
+serde       = { version = "^1.0", features = ["derive"] }
+serde_bytes = "^0.11"
+zstd        = { version = "^0.5", optional = true }
+rustls      = { version = "^0.16", optional = true }
+webpki      = { version = "^0.21", optional = true }
+md5         = { version = "^0.7", optional = true }
+sha2        = { version = "^0.8", optional = true }
+hmac        = { version = "^0.7", optional = true }
+pbkdf2      = { version = "^0.3", optional = true }
+base64      = { version = "^0.11", optional = true }
+futures-io  = { version = "^0.3", optional = true }
+async-std   = { version = "^1.5", optional = true }
+async-tls   = { version = "^0.7", optional = true }
+async-trait = { version = "^0.1", optional = true }
